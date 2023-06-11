@@ -407,6 +407,7 @@ const cart = new Cart(cartDB);
 const bar = document.getElementById("bar");
 const close = document.getElementById("close");
 const nav = document.getElementById("navbar");
+const header = document.getElementById("header");
 const root = document.querySelector(".root-container");
 const numberFormat = new Intl.NumberFormat("id-ID", {
   style: "currency",
@@ -415,7 +416,7 @@ const numberFormat = new Intl.NumberFormat("id-ID", {
 });
 const delayPage = 300; // millisecond
 
-const navLinks = nav.querySelectorAll("li a");
+const navLinks = document.querySelectorAll("#navbar li a, #mobile a");
 
 window.scrollTo({
   top: 0,
@@ -431,7 +432,10 @@ navLinks.forEach((e) => {
       behavior: "smooth",
     });
 
-    document.querySelector(".active").classList.remove("active");
+    document.querySelectorAll(".active").forEach(e => {
+      e.classList.remove("active");
+    });
+
     el.currentTarget.classList.add("active");
 
     let path = el.currentTarget.getAttribute("href");
