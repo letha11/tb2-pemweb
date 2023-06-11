@@ -42,6 +42,7 @@ function generateProductElement(product, element) {
 
   productDiv.querySelector("a").addEventListener("click", (e) => {
     e.preventDefault();
+    console.log(product);
     cart.addProduct(product);
     console.log("add to cart");
   });
@@ -51,9 +52,77 @@ function generateProductElement(product, element) {
 
 // Dynamic product example
 const products = [
-  new Product("Baju lebih adem", 10000, "Adidas", "img/products/f1.jpg"),
-  new Product("Baju Pantai Adem", 20000, "Tropical", "img/products/f2.jpg"),
-  new Product("Jaket wibu", 55000, "Hehe", "img/products/f3.jpg"),
+  new Product("Baju lebih adem", 10000, "Shirt", "img/products/f1.jpg"),
+  new Product("Baju Pantai Adem", 20000, "Shirt", "img/products/f2.jpg"),
+  new Product("Yellow autumn shirt", 45000, "Shirt", "img/products/f3.jpg"),
+  new Product("White cotton shirt", 50000, "Shirt", "img/products/f4.jpg"),
+  new Product("Dark cotton shirt", 50000, "Shirt", "img/products/f5.jpg"),
+  new Product(
+    "Long sleeve T-Shirt, free inner white shirt",
+    75000,
+    "Shirt",
+    "img/products/f6.jpg",
+  ),
+  new Product(
+    "Oversized pants",
+    95000,
+    "Pants",
+    "img/products/f7.jpg",
+  ),
+  new Product(
+    "",
+    100000,
+    "Shirt",
+    "img/products/f8.jpg",
+  ),
+  new Product(
+    "Long sleeve light blue T-shirt ",
+    120000,
+    "T-shirt",
+    "img/products/n1.jpg",
+  ),
+  new Product(
+    "Long sleeve grey T-shirt ",
+    120000,
+    "T-shirt",
+    "img/products/n2.jpg",
+  ),
+  new Product(
+    "Long sleeve white T-shirt",
+    125000,
+    "T-shirt",
+    "img/products/n3.jpg",
+  ),
+  new Product(
+    "Traditional shirt",
+    90000,
+    "T-shirt",
+    "img/products/n4.jpg",
+  ),
+  new Product(
+    "Long sleeve denim T-shirt",
+    150000,
+    "T-shirt",
+    "img/products/n5.jpg",
+  ),
+  new Product(
+    "Short pants men",
+    50000,
+    "Pants",
+    "img/products/n6.jpg",
+  ),
+  new Product(
+    "Long sleeve brown T-shirt",
+    120000,
+    "T-shirt",
+    "img/products/n7.jpg",
+  ),
+  new Product(
+    "Black T-shirt",
+    70000,
+    "T-shirt",
+    "img/products/n8.jpg",
+  ),
 ];
 
 /// CART
@@ -76,9 +145,9 @@ class CartLocalStorage {
               item.product.name,
               item.product.price,
               item.product.category,
-              item.product.imagePath
-            )
-          )
+              item.product.imagePath,
+            ),
+          ),
       );
     }
 
@@ -168,13 +237,13 @@ class Cart {
    */
   addProduct(product) {
     const existingProduct = this.cartItems.findIndex(
-      (item) => item.product.name === product.name
+      (item) => item.product.name === product.name,
     );
 
     if (existingProduct === -1) {
       const lastIndex = this.cartItems.length - 1;
       this.cartItems.push(
-        new CartItem((this.cartItems[lastIndex]?.id ?? 0) + 1, 1, product)
+        new CartItem((this.cartItems[lastIndex]?.id ?? 0) + 1, 1, product),
       );
     } else {
       this.cartItems[existingProduct].addAmount();
@@ -248,7 +317,8 @@ class Cart {
          </div>
        </div>
     `;
-        quantityProduct.innerHTML = `<input type="number" value="${item.amount}" min="1" max="99"/>`;
+        quantityProduct.innerHTML =
+          `<input type="number" value="${item.amount}" min="1" max="99"/>`;
         price.innerHTML = formattedTotalPrice;
 
         productDetail.querySelector("a").addEventListener("click", () => {
@@ -293,7 +363,7 @@ class Cart {
   calculateAndShowTotalPrice() {
     this.totalPrice = this.cartItems.reduce(
       (acc, item) => acc + item.product.price * item.amount,
-      0
+      0,
     );
 
     let formattedTotalPrice = numberFormat.format(this.totalPrice);
@@ -350,7 +420,7 @@ navLinks.forEach((e) => {
 function toggleLoadingIndicator() {
   const loadingIndicatorElement = document.querySelector(".loading-indicator");
   const loadingIndicatorContainer = document.querySelector(
-    ".loading-indicator-container"
+    ".loading-indicator-container",
   );
 
   loadingIndicatorElement.classList.toggle("active");
@@ -402,15 +472,23 @@ handleLocation("home.html");
 
 function homePage() {
   console.log("home page loaded");
-  const firstProductContainer = document.querySelector(".pro-container");
 
-  products.forEach((p) => generateProductElement(p, firstProductContainer));
+  const productContainers = document.querySelectorAll(".pro-container");
+  const featuredContainer = productContainers[0];
+  const newArrivalContainer = productContainers[1];
+
+  const featuredProducts = products.slice(0, 8);
+  const newArrivalProducts = products.slice(8, products.length);
+
+  featuredProducts.forEach((p) => generateProductElement(p, featuredContainer));
+  newArrivalProducts.forEach((p) =>
+    generateProductElement(p, newArrivalContainer)
+  );
 }
 
 function shopPage() {
   console.log("shop page loaded");
   /**
-   *
    * @param {string} query
    */
   function search(query) {
