@@ -52,8 +52,8 @@ function generateProductElement(product, element) {
 
 // Dynamic product example
 const products = [
-  new Product("Baju lebih adem", 10000, "Shirt", 4, "img/products/f1.jpg"),
-  new Product("Baju Pantai Adem", 20000, "Shirt", 3, "img/products/f2.jpg"),
+  new Product("Fun shirt", 10000, "Shirt", 4, "img/products/f1.jpg"),
+  new Product("Nature pattern shirt", 20000, "Shirt", 3, "img/products/f2.jpg"),
   new Product("Yellow autumn shirt", 45000, "Shirt", 4, "img/products/f3.jpg"),
   new Product("White cotton shirt", 50000, "Shirt", 5, "img/products/f4.jpg"),
   new Product("Dark cotton shirt", 50000, "Shirt", 5, "img/products/f5.jpg"),
