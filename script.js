@@ -5,12 +5,15 @@ class Product {
    *
    * @param {string} name
    * @param {number} price
+   * @param {string} category
+   * @param {number} star
    * @param {string} imagePath - URL of the image product
    */
-  constructor(name, price, category, imagePath) {
+  constructor(name, price, category, star, imagePath) {
     this.name = name;
     this.price = price;
     this.category = category;
+    this.star = star;
     this.imagePath = imagePath;
   }
 }
@@ -28,23 +31,20 @@ function generateProductElement(product, element) {
      <div class="des">
          <span>${product.category}</span>
          <h5>${product.name}</h5>
-         <div class="star">
-             <i class="fas fa-star"></i>
-             <i class="fas fa-star"></i>
-             <i class="fas fa-star"></i>
-             <i class="fas fa-star"></i>
-             <i class="fas fa-star"></i>
-         </div>
+         <div class="star"></div>
          <h4>${numberFormat.format(product.price)}</h4>
      </div>
      <a href="#" ><i class="fa-sharp fa-solid fa-cart-shopping"></i></a>
 `;
+  const starContainer = productDiv.querySelector(".star");
+
+  for (let i = 0; i < product.star; i++) {
+    starContainer.innerHTML += "<i class='fas fa-star'></i>";
+  }
 
   productDiv.querySelector("a").addEventListener("click", (e) => {
     e.preventDefault();
-    console.log(product);
     cart.addProduct(product);
-    console.log("add to cart");
   });
 
   element.appendChild(productDiv);
@@ -52,75 +52,86 @@ function generateProductElement(product, element) {
 
 // Dynamic product example
 const products = [
-  new Product("Baju lebih adem", 10000, "Shirt", "img/products/f1.jpg"),
-  new Product("Baju Pantai Adem", 20000, "Shirt", "img/products/f2.jpg"),
-  new Product("Yellow autumn shirt", 45000, "Shirt", "img/products/f3.jpg"),
-  new Product("White cotton shirt", 50000, "Shirt", "img/products/f4.jpg"),
-  new Product("Dark cotton shirt", 50000, "Shirt", "img/products/f5.jpg"),
+  new Product("Baju lebih adem", 10000, "Shirt", 4, "img/products/f1.jpg"),
+  new Product("Baju Pantai Adem", 20000, "Shirt", 3, "img/products/f2.jpg"),
+  new Product("Yellow autumn shirt", 45000, "Shirt", 4, "img/products/f3.jpg"),
+  new Product("White cotton shirt", 50000, "Shirt", 5, "img/products/f4.jpg"),
+  new Product("Dark cotton shirt", 50000, "Shirt", 5, "img/products/f5.jpg"),
   new Product(
     "Long sleeve T-Shirt, free inner white shirt",
     75000,
     "Shirt",
+    5,
     "img/products/f6.jpg",
   ),
   new Product(
     "Oversized pants",
     95000,
     "Pants",
+    3,
     "img/products/f7.jpg",
   ),
   new Product(
-    "",
+    "Women shirt",
     100000,
     "Shirt",
+    4,
     "img/products/f8.jpg",
   ),
   new Product(
     "Long sleeve light blue T-shirt ",
     120000,
     "T-shirt",
+    2,
     "img/products/n1.jpg",
   ),
   new Product(
     "Long sleeve grey T-shirt ",
     120000,
     "T-shirt",
+    5,
     "img/products/n2.jpg",
   ),
   new Product(
     "Long sleeve white T-shirt",
     125000,
     "T-shirt",
+    3,
     "img/products/n3.jpg",
   ),
   new Product(
     "Traditional shirt",
     90000,
     "T-shirt",
+    4,
     "img/products/n4.jpg",
   ),
   new Product(
     "Long sleeve denim T-shirt",
     150000,
     "T-shirt",
+    5,
     "img/products/n5.jpg",
   ),
   new Product(
     "Short pants men",
     50000,
     "Pants",
+    5,
     "img/products/n6.jpg",
   ),
   new Product(
     "Long sleeve brown T-shirt",
     120000,
     "T-shirt",
+    3,
     "img/products/n7.jpg",
   ),
   new Product(
     "Black T-shirt",
     70000,
     "T-shirt",
+    2,
     "img/products/n8.jpg",
   ),
 ];
@@ -145,6 +156,7 @@ class CartLocalStorage {
               item.product.name,
               item.product.price,
               item.product.category,
+              item.product.star,
               item.product.imagePath,
             ),
           ),
@@ -478,7 +490,7 @@ function homePage() {
   const newArrivalContainer = productContainers[1];
 
   const featuredProducts = products.slice(0, 8);
-  const newArrivalProducts = products.slice(8, products.length);
+  const newArrivalProducts = products.slice(8, 16);
 
   featuredProducts.forEach((p) => generateProductElement(p, featuredContainer));
   newArrivalProducts.forEach((p) =>
