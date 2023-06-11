@@ -228,17 +228,19 @@ class Cart {
 
   /**
    * Will show up pop up menu that notify the user the product are getting added into the cart
+   * @param {HTMLElement} content
    */
-  notifyAdded() {
-    const successAddingElement = document.querySelector(".success-add");
+  notify(content) {
+    const popupContainer = document.querySelector(".popup-container");
+    popupContainer.innerHTML = content;
     const overlay = document.querySelector(".overlay");
 
     overlay.addEventListener("click", () => {
-      successAddingElement.classList.remove("active");
+      popupContainer.classList.remove("active");
       overlay.classList.remove("active");
     });
 
-    successAddingElement.classList.toggle("active");
+    popupContainer.classList.toggle("active");
     overlay.classList.toggle("active");
   }
 
@@ -261,7 +263,7 @@ class Cart {
       this.cartItems[existingProduct].addAmount();
     }
 
-    this.notifyAdded();
+    this.notify("<h4>Successfully added product to cart</h4>");
 
     this.cartLocalStorage.store(this.cartItems);
   }
@@ -291,6 +293,20 @@ class Cart {
       this.generateCartItem();
       // TODO: REMOVE FROM LOCALSTORAGE
     }
+  }
+
+  checkout() {
+    this.notify("<h4>Checkout Successfull</h4>");
+
+    this.cartItems.length = 0;
+    this.generateCartItem();
+    
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    
+    this.cartLocalStorage.store(this.cartItems);
   }
 
   /**
@@ -541,6 +557,14 @@ function shopPage() {
 
 function cartPage() {
   console.log("cart page loaded");
+  
+  const checkoutBtn = document.querySelector("#checkout");
+
+  checkoutBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    cart.checkout();
+  });
 
   cart.generateCartItem();
 }

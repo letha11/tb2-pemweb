@@ -1005,12 +1005,23 @@ th:last-child {
   /* padding-top: 200px; */
 }
 
-.total-price tr:last-child td {
-  background-color: rgba(6, 85, 103, 0.578);
-  color: #fff;
-  font-weight: 500;
-  /* margin-top: 0px; */
+.total-price tr:last-child button {
+  width: 100%;
+  color: white;
+  background-color: rgb(6, 85, 103);
+  padding: 1rem 1.5rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border: 1px solid rgb(6, 85, 103);
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 200ms;
 }
+.total-price tr:last-child button:hover {
+  background-color: white;
+  color: #465b52;
+}
+
 
 /* Start Media Query*/
 
