@@ -16,44 +16,45 @@ class Product {
     this.star = star;
     this.imagePath = imagePath;
   }
-}
 
-/**
- * Creating product HTML element
- * @param {Product} product
- * @param {HTMLElement} element
- */
-function generateProductElement(product, element) {
-  const productDiv = document.createElement("div");
-  productDiv.className = "pro";
-  productDiv.innerHTML = `
-     <img src="${product.imagePath}" alt="">
+  /**
+   * Creating product HTML element
+   * @param {Product} product
+   * @param {HTMLElement} element
+   */
+  generateProductElement(element) {
+    const productDiv = document.createElement("div");
+    productDiv.className = "pro";
+    productDiv.innerHTML = `
+     <img src="${this.imagePath}" alt="">
      <div class="des">
-         <span>${product.category}</span>
-         <h5>${product.name}</h5>
+         <span>${this.category}</span>
+         <h5>${this.name}</h5>
          <div class="star"></div>
-         <h4>${numberFormat.format(product.price)}</h4>
+         <h4>${numberFormat.format(this.price)}</h4>
      </div>
      <a href="#" ><i class="fa-sharp fa-solid fa-cart-shopping"></i></a>
 `;
-  const starContainer = productDiv.querySelector(".star");
+    const starContainer = productDiv.querySelector(".star");
 
-  for (let i = 0; i < product.star; i++) {
-    starContainer.innerHTML += "<i class='fa-sharp fa-solid fa-star'></i>";
-  }
-
-  if (product.star < 5) {
-    for (let i = product.star; i < 5; i++) {
-      starContainer.innerHTML += `<i class="fa-sharp fa-regular fa-star"></i>`;
+    for (let i = 0; i < this.star; i++) {
+      starContainer.innerHTML += "<i class='fa-sharp fa-solid fa-star'></i>";
     }
+
+    if (this.star < 5) {
+      for (let i = this.star; i < 5; i++) {
+        starContainer.innerHTML +=
+          `<i class="fa-sharp fa-regular fa-star"></i>`;
+      }
+    }
+
+    productDiv.querySelector("a").addEventListener("click", (e) => {
+      e.preventDefault();
+      cart.addProduct(this);
+    });
+
+    element.appendChild(productDiv);
   }
-
-  productDiv.querySelector("a").addEventListener("click", (e) => {
-    e.preventDefault();
-    cart.addProduct(product);
-  });
-
-  element.appendChild(productDiv);
 }
 
 // Dynamic product example
@@ -434,6 +435,7 @@ class Cart {
 const cartDB = new CartLocalStorage();
 const cart = new Cart(cartDB);
 
+const delayPage = 300; // millisecond
 const bar = document.getElementById("bar");
 const close = document.getElementById("close");
 const nav = document.getElementById("navbar");
@@ -444,7 +446,6 @@ const numberFormat = new Intl.NumberFormat("id-ID", {
   currency: "IDR",
   minimumFractionDigits: 0,
 });
-const delayPage = 300; // millisecond
 
 const navLinks = document.querySelectorAll("#navbar li a, #mobile a");
 
@@ -464,11 +465,6 @@ navLinks.forEach((e) => {
     el.currentTarget.classList.add("active");
 
     let path = el.currentTarget.getAttribute("href");
-
-    // prevent the same route from being pushed
-    // if (`/${path.split("/").at(-1)}` === window.location.pathname) {
-    //   return; // do nothing
-    // }
 
     handleLocation(path);
   });
@@ -515,26 +511,26 @@ const routes = {
  * @param {string} path
  */
 async function handleLocation(path) {
-    if (path === "index.html" || path === "") {
-      path = "home.html";
-    }
+  if (path === "index.html" || path === "") {
+    path = "home.html";
+  }
 
-    showLoadingIndicator(); // show
-    root.innerHTML = "";
-    let newPage = await fetch(path).then((response) => response.text());
+  showLoadingIndicator(); // show
+  root.innerHTML = "";
+  let newPage = await fetch(path).then((response) => response.text());
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
 
-    // for loading effect to show (only for demo purposes)
-    setTimeout(async () => {
-      hideLoadingIndicator(); // hide
-      root.innerHTML = newPage;
+  // for loading effect to show (only for demo purposes)
+  setTimeout(async () => {
+    hideLoadingIndicator(); // hide
+    root.innerHTML = newPage;
 
-      routes[path].init();
-    }, delayPage);
+    routes[path].init();
+  }, delayPage);
 }
 
 handleLocation("home.html");
@@ -549,9 +545,9 @@ function homePage() {
   const featuredProducts = products.slice(0, 8);
   const newArrivalProducts = products.slice(8, 16);
 
-  featuredProducts.forEach((p) => generateProductElement(p, featuredContainer));
+  featuredProducts.forEach((p) => p.generateProductElement(featuredContainer));
   newArrivalProducts.forEach((p) =>
-    generateProductElement(p, newArrivalContainer)
+    p.generateProductElement(newArrivalContainer)
   );
 }
 
@@ -575,7 +571,7 @@ function shopPage() {
     setTimeout(() => {
       if (filteredProducts.length !== 0) {
         filteredProducts.forEach((product) => {
-          generateProductElement(product, productContainer);
+          product.generateProductElement(productContainer);
         });
       } else {
         noResultElement.classList.add("show"); // show no result element
@@ -586,7 +582,7 @@ function shopPage() {
   }
 
   const productContainer = document.querySelector(".pro-container");
-  products.forEach((p) => generateProductElement(p, productContainer));
+  products.forEach((p) => p.generateProductElement(productContainer));
 
   const searchButton = document.querySelector(".search-btn");
   searchButton.addEventListener("click", (e) => {
