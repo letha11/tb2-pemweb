@@ -494,7 +494,7 @@ const routes = {
     init: homePage, // an initializer function that will be called when the page finished loading.
   },
   "home.html": {
-    init: homePage, // an initializer function that will be called when the page finished loading.
+    init: homePage,
   },
   "shop.html": {
     init: shopPage,
