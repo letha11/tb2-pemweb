@@ -445,7 +445,6 @@ const numberFormat = new Intl.NumberFormat("id-ID", {
   minimumFractionDigits: 0,
 });
 const delayPage = 300; // millisecond
-let loading = true;
 
 const navLinks = document.querySelectorAll("#navbar li a, #mobile a");
 
@@ -475,14 +474,20 @@ navLinks.forEach((e) => {
   });
 });
 
-function toggleLoadingIndicator() {
-  const loadingIndicatorElement = document.querySelector(".loading-indicator");
-  const loadingIndicatorContainer = document.querySelector(
-    ".loading-indicator-container",
-  );
+/// LOADING INDICATOR
+const loadingIndicatorElement = document.querySelector(".loading-indicator");
+const loadingIndicatorContainer = document.querySelector(
+  ".loading-indicator-container",
+);
 
-  loadingIndicatorElement.classList.toggle("active");
-  loadingIndicatorContainer.classList.toggle("active");
+function showLoadingIndicator() {
+  loadingIndicatorElement.classList.add("active");
+  loadingIndicatorContainer.classList.add("active");
+}
+
+function hideLoadingIndicator() {
+  loadingIndicatorElement.classList.remove("active");
+  loadingIndicatorContainer.classList.remove("active");
 }
 
 const routes = {
@@ -510,26 +515,26 @@ const routes = {
  * @param {string} path
  */
 async function handleLocation(path) {
-  if (path === "index.html" || path === "") {
-    path = "home.html";
-  }
+    if (path === "index.html" || path === "") {
+      path = "home.html";
+    }
 
-  toggleLoadingIndicator(); // show
-  root.innerHTML = "";
-  let newPage = await fetch(path).then((response) => response.text());
+    showLoadingIndicator(); // show
+    root.innerHTML = "";
+    let newPage = await fetch(path).then((response) => response.text());
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
 
-  // for loading effect to show (only for demo purposes)
-  setTimeout(async () => {
-    toggleLoadingIndicator(); // hide
-    root.innerHTML = newPage;
+    // for loading effect to show (only for demo purposes)
+    setTimeout(async () => {
+      hideLoadingIndicator(); // hide
+      root.innerHTML = newPage;
 
-    routes[path].init();
-  }, delayPage);
+      routes[path].init();
+    }, delayPage);
 }
 
 handleLocation("home.html");
@@ -558,7 +563,7 @@ function shopPage() {
   function search(query) {
     productContainer.innerHTML = "";
 
-    toggleLoadingIndicator();
+    showLoadingIndicator();
 
     const noResultElement = document.querySelector(".no-result");
     noResultElement.classList.remove("show"); // hide no result element
@@ -576,7 +581,7 @@ function shopPage() {
         noResultElement.classList.add("show"); // show no result element
       }
 
-      toggleLoadingIndicator();
+      hideLoadingIndicator();
     }, delayPage);
   }
 
