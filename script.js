@@ -445,6 +445,7 @@ const numberFormat = new Intl.NumberFormat("id-ID", {
   minimumFractionDigits: 0,
 });
 const delayPage = 300; // millisecond
+let loading = true;
 
 const navLinks = document.querySelectorAll("#navbar li a, #mobile a");
 
@@ -456,11 +457,6 @@ window.scrollTo({
 navLinks.forEach((e) => {
   e.addEventListener("click", (el) => {
     el.preventDefault();
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
 
     document.querySelectorAll(".active").forEach((e) => {
       e.classList.remove("active");
@@ -521,6 +517,12 @@ async function handleLocation(path) {
   toggleLoadingIndicator(); // show
   root.innerHTML = "";
   let newPage = await fetch(path).then((response) => response.text());
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+
   // for loading effect to show (only for demo purposes)
   setTimeout(async () => {
     toggleLoadingIndicator(); // hide
