@@ -39,7 +39,13 @@ function generateProductElement(product, element) {
   const starContainer = productDiv.querySelector(".star");
 
   for (let i = 0; i < product.star; i++) {
-    starContainer.innerHTML += "<i class='fas fa-star'></i>";
+    starContainer.innerHTML += "<i class='fa-sharp fa-solid fa-star'></i>";
+  }
+
+  if (product.star < 5) {
+    for (let i = product.star; i < 5; i++) {
+      starContainer.innerHTML += `<i class="fa-sharp fa-regular fa-star"></i>`;
+    }
   }
 
   productDiv.querySelector("a").addEventListener("click", (e) => {
@@ -53,10 +59,34 @@ function generateProductElement(product, element) {
 // Dynamic product example
 const products = [
   new Product("Fun shirt", 10000, "Shirt", 4, "assets/img/products/f1.jpg"),
-  new Product("Nature pattern shirt", 20000, "Shirt", 3, "assets/img/products/f2.jpg"),
-  new Product("Yellow autumn shirt", 45000, "Shirt", 4, "assets/img/products/f3.jpg"),
-  new Product("White cotton shirt", 50000, "Shirt", 5, "assets/img/products/f4.jpg"),
-  new Product("Dark cotton shirt", 50000, "Shirt", 5, "assets/img/products/f5.jpg"),
+  new Product(
+    "Nature pattern shirt",
+    20000,
+    "Shirt",
+    3,
+    "assets/img/products/f2.jpg",
+  ),
+  new Product(
+    "Yellow autumn shirt",
+    45000,
+    "Shirt",
+    4,
+    "assets/img/products/f3.jpg",
+  ),
+  new Product(
+    "White cotton shirt",
+    50000,
+    "Shirt",
+    5,
+    "assets/img/products/f4.jpg",
+  ),
+  new Product(
+    "Dark cotton shirt",
+    50000,
+    "Shirt",
+    5,
+    "assets/img/products/f5.jpg",
+  ),
   new Product(
     "Long sleeve T-Shirt, free inner white shirt",
     75000,
@@ -300,12 +330,12 @@ class Cart {
 
     this.cartItems.length = 0;
     this.generateCartItem();
-    
+
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
-    
+
     this.cartLocalStorage.store(this.cartItems);
   }
 
@@ -339,7 +369,7 @@ class Cart {
          <img src="${item.product.imagePath}"/>
          <div>
            <p>${item.product.name}</p>
-           <small>Harga: ${numberFormat.format(item.product.price)}</small>
+           <small>Price: ${numberFormat.format(item.product.price)}</small>
            <br />
            <a href="#">Remove</a>
          </div>
@@ -432,7 +462,7 @@ navLinks.forEach((e) => {
       behavior: "smooth",
     });
 
-    document.querySelectorAll(".active").forEach(e => {
+    document.querySelectorAll(".active").forEach((e) => {
       e.classList.remove("active");
     });
 
@@ -561,7 +591,7 @@ function shopPage() {
 
 function cartPage() {
   console.log("cart page loaded");
-  
+
   const checkoutBtn = document.querySelector("#checkout");
 
   checkoutBtn.addEventListener("click", (e) => {
