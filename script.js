@@ -466,7 +466,7 @@ navLinks.forEach((e) => {
 
     let path = el.currentTarget.getAttribute("href");
 
-    handleLocation(path);
+    changePage(path);
   });
 });
 
@@ -510,7 +510,15 @@ const routes = {
 /**
  * @param {string} path
  */
-async function handleLocation(path) {
+async function changePage(path) {
+  document.querySelectorAll(".active").forEach((e) => {
+    e.classList.remove("active");
+  });
+
+  const currentNavLink = document.querySelector(`#navbar li a[href="${path}"]`)
+  currentNavLink.classList.add("active");
+
+
   if (path === "index.html" || path === "") {
     path = "home.html";
   }
@@ -533,7 +541,8 @@ async function handleLocation(path) {
   }, delayPage);
 }
 
-handleLocation("home.html");
+// Initial Page
+changePage("home.html");
 
 function homePage() {
   console.log("home page loaded");
