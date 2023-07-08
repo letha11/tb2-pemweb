@@ -18,154 +18,38 @@ class Product {
   }
 
   /**
-   * Creating product HTML element
-   * @param {Product} product
-   * @param {HTMLElement} element
+   *  Creating new instance of product from the given element
+   *
+   *  @param {Element} e
    */
-  generateProductElement(element) {
-    const productDiv = document.createElement("div");
-    productDiv.className = "pro";
-    productDiv.innerHTML = `
-     <img src="${this.imagePath}" alt="">
-     <div class="des">
-         <span>${this.category}</span>
-         <h5>${this.name}</h5>
-         <div class="star"></div>
-         <h4>${numberFormat.format(this.price)}</h4>
-     </div>
-     <a href="#" ><i class="fa-sharp fa-solid fa-cart-shopping"></i></a>
-`;
-    const starContainer = productDiv.querySelector(".star");
+  static fromElement(e) {
+    const name = e.querySelector("h5").innerText;
+    const category = e.querySelector("span").innerText;
+    const imagePath = e.querySelector("img").attributes["src"].value;
+    const star = e.querySelectorAll("i.fa-solid.fa-star").length;
+    let price = e.querySelector("h4").innerText;
+    price = price.split(" ")[1];
+    price = parseInt(price.replace(".", ""));
 
-    for (let i = 0; i < this.star; i++) {
-      starContainer.innerHTML += "<i class='fa-sharp fa-solid fa-star'></i>";
-    }
+    return new Product(name, price, category, star, imagePath);
+  }
 
-    if (this.star < 5) {
-      for (let i = this.star; i < 5; i++) {
-        starContainer.innerHTML +=
-          `<i class="fa-sharp fa-regular fa-star"></i>`;
-      }
-    }
+  /**
+   *  Making the cart button interactable, for the given product element
+   *
+   *  @param {Element} e
+   */
+  static interactableCart(e) {
+    const cartButton = e.querySelector("a");
 
-    productDiv.querySelector("a").addEventListener("click", (e) => {
-      e.preventDefault();
-      cart.addProduct(this);
+    const product = Product.fromElement(e);
+
+    cartButton.addEventListener("click", (l) => {
+      l.preventDefault();
+      cart.addProduct(product);
     });
-
-    element.appendChild(productDiv);
   }
 }
-
-// Dynamic product example
-const products = [
-  new Product("Fun shirt", 10000, "Shirt", 4, "assets/img/products/f1.jpg"),
-  new Product(
-    "Nature pattern shirt",
-    20000,
-    "Shirt",
-    3,
-    "assets/img/products/f2.jpg",
-  ),
-  new Product(
-    "Yellow autumn shirt",
-    45000,
-    "Shirt",
-    4,
-    "assets/img/products/f3.jpg",
-  ),
-  new Product(
-    "White cotton shirt",
-    50000,
-    "Shirt",
-    5,
-    "assets/img/products/f4.jpg",
-  ),
-  new Product(
-    "Dark cotton shirt",
-    50000,
-    "Shirt",
-    5,
-    "assets/img/products/f5.jpg",
-  ),
-  new Product(
-    "Long sleeve T-Shirt, free inner white shirt",
-    75000,
-    "Shirt",
-    5,
-    "assets/img/products/f6.jpg",
-  ),
-  new Product(
-    "Oversized pants",
-    95000,
-    "Pants",
-    3,
-    "assets/img/products/f7.jpg",
-  ),
-  new Product(
-    "Women shirt",
-    100000,
-    "Shirt",
-    4,
-    "assets/img/products/f8.jpg",
-  ),
-  new Product(
-    "Long sleeve light blue T-shirt ",
-    120000,
-    "T-shirt",
-    2,
-    "assets/img/products/n1.jpg",
-  ),
-  new Product(
-    "Long sleeve grey T-shirt ",
-    120000,
-    "T-shirt",
-    5,
-    "assets/img/products/n2.jpg",
-  ),
-  new Product(
-    "Long sleeve white T-shirt",
-    125000,
-    "T-shirt",
-    3,
-    "assets/img/products/n3.jpg",
-  ),
-  new Product(
-    "Traditional shirt",
-    90000,
-    "T-shirt",
-    4,
-    "assets/img/products/n4.jpg",
-  ),
-  new Product(
-    "Long sleeve denim T-shirt",
-    150000,
-    "T-shirt",
-    5,
-    "assets/img/products/n5.jpg",
-  ),
-  new Product(
-    "Short pants men",
-    50000,
-    "Pants",
-    5,
-    "assets/img/products/n6.jpg",
-  ),
-  new Product(
-    "Long sleeve brown T-shirt",
-    120000,
-    "T-shirt",
-    3,
-    "assets/img/products/n7.jpg",
-  ),
-  new Product(
-    "Black T-shirt",
-    70000,
-    "T-shirt",
-    2,
-    "assets/img/products/n8.jpg",
-  ),
-];
 
 /// CART
 class CartLocalStorage {
@@ -251,10 +135,6 @@ class Cart {
      * @type {CartItem[]}
      */
     this.cartItems = this.cartLocalStorage.get();
-    // this.cartItems = [
-    //   new CartItem(1, 5, products[0]),
-    //   new CartItem(2, 1, products[1]),
-    // ];
   }
 
   /**
@@ -490,10 +370,10 @@ const routes = {
   "": {
     init: homePage, // an initializer function that will be called when the page finished loading.
   },
-  "home.html": {
+  "home.php": {
     init: homePage,
   },
-  "shop.html": {
+  "shop.php": {
     init: shopPage,
   },
   "cart.html": {
@@ -515,13 +395,8 @@ async function changePage(path) {
     e.classList.remove("active");
   });
 
-  const currentNavLink = document.querySelector(`#navbar li a[href="${path}"]`)
+  const currentNavLink = document.querySelector(`#navbar li a[href="${path}"]`);
   currentNavLink.classList.add("active");
-
-
-  if (path === "index.html" || path === "") {
-    path = "home.html";
-  }
 
   showLoadingIndicator(); // show
   root.innerHTML = "";
@@ -537,31 +412,28 @@ async function changePage(path) {
     hideLoadingIndicator(); // hide
     root.innerHTML = newPage;
 
-    routes[path].init();
+    routes[path]?.init();
   }, delayPage);
 }
 
 // Initial Page
-changePage("home.html");
+changePage("home.php");
 
 function homePage() {
   console.log("home page loaded");
 
-  const productContainers = document.querySelectorAll(".pro-container");
-  const featuredContainer = productContainers[0];
-  const newArrivalContainer = productContainers[1];
+  const productElements = document.querySelectorAll(".pro");
 
-  const featuredProducts = products.slice(0, 8);
-  const newArrivalProducts = products.slice(8, 16);
+  productElements.forEach((e) => Product.interactableCart(e));
 
-  featuredProducts.forEach((p) => p.generateProductElement(featuredContainer));
-  newArrivalProducts.forEach((p) =>
-    p.generateProductElement(newArrivalContainer)
-  );
 }
 
 function shopPage() {
   console.log("shop page loaded");
+  const productContainer = document.querySelector(".pro-container");
+  const productElements = document.querySelectorAll(".pro");
+  const searchButton = document.querySelector(".search-btn");
+
   /**
    * @param {string} query
    */
@@ -573,14 +445,19 @@ function shopPage() {
     const noResultElement = document.querySelector(".no-result");
     noResultElement.classList.remove("show"); // hide no result element
 
-    const filteredProducts = products.filter((e) =>
-      e.name.toLowerCase().includes(query)
-    );
+    const filteredProducts = [];
+
+    productElements.forEach((e) => {
+      const productName = e.querySelector("h5");
+      if (productName.innerText.toLowerCase().includes(query)) {
+        filteredProducts.push(e);
+      }
+    });
 
     setTimeout(() => {
       if (filteredProducts.length !== 0) {
-        filteredProducts.forEach((product) => {
-          product.generateProductElement(productContainer);
+        filteredProducts.forEach((productElement) => {
+          productContainer.appendChild(productElement);
         });
       } else {
         noResultElement.classList.add("show"); // show no result element
@@ -590,10 +467,8 @@ function shopPage() {
     }, delayPage);
   }
 
-  const productContainer = document.querySelector(".pro-container");
-  products.forEach((p) => p.generateProductElement(productContainer));
+  productElements.forEach((e) => Product.interactableCart(e));
 
-  const searchButton = document.querySelector(".search-btn");
   searchButton.addEventListener("click", (e) => {
     e.preventDefault();
     const searchInput = document.querySelector("[type='text']#query");
@@ -633,15 +508,3 @@ if (close) {
     nav.classList.remove("active");
   });
 }
-
-/* Bottom to Top button */
-
-// const toTop = document.querySelector(".to-top");
-//
-// window.addEventListener("scroll", () => {
-//   if (window.pageYOffset > 100) {
-//     toTop.classList.add("active");
-//   } else {
-//     toTop.classList.remove("active");
-//   }
-// });

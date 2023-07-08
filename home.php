@@ -1,8 +1,14 @@
+<?php
+include_once("library/config.php");
+include_once("get_products.php");
+
+?>
+
 <section id="hero">
   <h4>Trade in Offer</h4>
   <h2>Super Value Deals</h2>
   <h1>On all products</h1>
-  <button>Shop Now</button>
+  <button onclick="changePage('shop.php')">Shop Now</button>
   <a href="#" class="to-top">
     <p class="to-top--title">
       BACK <br />
@@ -42,7 +48,14 @@
   <h2>Featured Products</h2>
   <p>Summer Collection</p>
 
-  <div class="pro-container"></div>
+  <div class="pro-container">
+  <?php
+    $sliced_products = array_slice(array: $products, offset: 8, length: 8);
+    foreach($sliced_products as $product) {
+      echo generateProductElement($product);
+    }
+  ?>
+  </div>
 </section>
 
 <section id="banner" class="section-m1">
@@ -55,7 +68,14 @@
   <h2>New Arrivals</h2>
   <p>Summer Collection</p>
 
-  <div class="pro-container"></div>
+  <div class="pro-container">
+    <?php
+      $sliced_products = array_slice(array: $products, offset: 0, length: 8);
+      foreach($sliced_products as $product) {
+        echo generateProductElement($product);
+      }
+    ?>
+  </div>
 </section>
 
 <section id="sm-banner" class="section-p1">

@@ -1,3 +1,9 @@
+<?php
+
+include_once("library/config.php");
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,8 +23,8 @@
     <div>
       <ul id="navbar">
         <a href="#" id="close"><i class="fa fa-close"></i></a>
-        <li><a class="active" href="home.html">Home</a></li>
-        <li><a href="shop.html">Shop</a></li>
+        <li><a class="active" href="home.php">Home</a></li>
+        <li><a href="shop.php">Shop</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="contact.html">Contact</a></li>
         <li id="lg-bag">

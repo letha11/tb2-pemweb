@@ -1,3 +1,3 @@
-# Pemrograman Web 2 - Tugas Besar 2
+# Pemrograman Web 2 - UAS
 
 Kelompok 5
